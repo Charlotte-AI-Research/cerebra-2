@@ -22,24 +22,38 @@
    "contracted_services": [
      {
      "total_requested_amount": 0
-   }
- ],
-   "printing": [{
-     "total_requested_amount": 0,
+     "items":[{
+     "amount_requested":0,
      "description": "Printed items such as programs, posters, flyers, etc.",
      "vendor": {
-       "name": "Union Station or Repros",
-       "quote": 10
-     }
-   }],
-   "advertising": [{
+           "name": "Union Station or Repros",
+           "quote": 10
+         }
+   }]
+   }
+ ],
+   "printing": {
      "total_requested_amount": 0,
+     "items":[{
+     "amount_requested":0,
+     "description": "Printed items such as programs, posters, flyers, etc.",
+     "vendor": {
+           "name": "Union Station or Repros",
+           "quote": 10
+         }
+   }],
+
+   "advertising": {
+     "total_requested_amount": 0,
+     "items":[{
      "description": "Marketing or advertising expenses including social media, publications, etc.",
      "vendor": {
-       "name": "",
-       "quote": ""
-     }
-   }],
+           "name": "",
+           "quote": ""
+         }
+     }]
+   },
+
    "space_equipment": {
      "total_requested_amount": 0,
      "description": "Reserved University spaces, services, technicians, or equipment.",
@@ -49,27 +63,41 @@
        "technicians_staff": false
      }
    },
+
+
    "program_supplies": {
-     "total_requested_amount": 0,
+     "total_amount_requested": 0,
+     "items":[{
+     "amount_requested": 0,
      "description": "Supplies crucial to the event's success, items from outside vendors.",
      "note": "Items cannot be sold or destroyed, must be stored in SAFC."
+   }]
    },
+
    "food_beverage": {
-     "total_requested_amount": 0,
+     "total_amount_requested": 0,
+     "items":[{
+     "amount_requested": 0,
      "description": "Food and beverage expenses, must be ordered through Chartwells.",
-     "limit_note": "Cannot exceed half of the overall budget."
-   },
+     #"limit_note": "Cannot exceed half of the overall budget."
+   }],
+
+
    "total_budget": 0,
    "budget_limit_note": "Must not exceed $2,500 for a single event or $4,000 for joint events."
  }
 }
 """
 import json
+
+from generation.generate import create_justification
+
+
 class Event:
     def __init__(self):
         self.event_name:str = None
         self.event_location: str = None
-        self.start_date: Date = None
+        self.start_date: str = None
         self.start_time: str = None
         self.end_date: str = None
         self.end_time: str = None
@@ -77,6 +105,7 @@ class Event:
         self.event_purpose: str = None
         self.benefit_to_community: str = None
         self.items_requested: list = None
+        self.total_budget: float = 0.00
 
     def calculate_total_costs(self):
         print(55)
@@ -85,9 +114,8 @@ class Event:
         for item in self.items_requested:
             catagory = item.catagory
             event_description = self.event_description
-            for subitems in item.sub_items:
-                # generate justification
-                justification: str = None
+            for subitem in item.sub_items:
+                justification: str = create_justification(catagory, event_description, subitem)
                 item.justification+= justification + " "
 
     def to_json(self)-> dict:
@@ -98,6 +126,7 @@ class Event:
     def from_json(self,obj):
         object = load(obj)
         self(*object)
+
     def from_file_json(self,file_location):
         obj = open(file_location)
         object = load(obj)
