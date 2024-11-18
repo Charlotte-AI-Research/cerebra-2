@@ -119,8 +119,9 @@ class Event:
                 item.justification+= justification + " "
 
     def to_json(self)-> dict:
+        #todo
         json = {}
-        #alert user that certain catagories are empty!
+        #feat: alert programmer that certain catagories are empty!
         return json
 
     def from_json(self,obj):
@@ -133,12 +134,14 @@ class Event:
         self(*object)
 
 class Item:
-    def __init__(self):
-        self.catagory = ""
-        self.cost = 0.00
-        self.sub_items = [] #"Sweet Tea, "Hamburger Box Qt 24, ..."
-        self.vendor = ""
-        self.justification = "" # We need to create a justification for each item in the items list
+    def __init__(self,catagory:str, cost: float, subitems: list, vendor:str, justification:str):
+        self.catagory = catagory
+        self.cost = cost
+        self.sub_items = subitems #"Sweet Tea, "Hamburger Box Qt 24, ..."
+        self.vendor = vendor
+        self.justification = justification # We need to create a justification for each item in the items list
+
+
 
 
 
